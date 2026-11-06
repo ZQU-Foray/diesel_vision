@@ -1,17 +1,22 @@
 #ifndef FORAY_VISION_DUAL_DETECTOR_HPP
 #define FORAY_VISION_DUAL_DETECTOR_HPP
 
+<<<<<<< HEAD:include/diesel_vision/dual_detector.hpp
 #include "diesel_vision/detector.hpp"
 #include "diesel_vision/pattern_match.hpp"
+=======
+#include "foray_vision/armor_detection.hpp"
+#include "foray_vision/pattern_match.hpp"
+>>>>>>> 02baef7 (feat(vision):在detector.cpp现在只保留双模型检测的接口,去除了单模型的接口,模拟器的单模型还保留但是不能运行后续处理):include/foray_vision/dual_detector.hpp
 
 #include <memory>
 #include <string>
 
 namespace diesel_vision {
 
-// 两个新模型各管一件事；旧版 Detector 不参与这里的解码。
+// 颜色/四角点与图案模型各管一件事。
 class DualDetector {
-public:
+  public:
     // intra_op_threads=0 沿用 ONNX Runtime 默认值；可按部署机器实测调节。
     DualDetector(const std::string& color_pose_model, const std::string& pattern_model,
                  int intra_op_threads = 0);
@@ -39,7 +44,7 @@ public:
     };
     Frame detect(const cv::Mat& bgr_image);
 
-private:
+  private:
     class Model;
     std::unique_ptr<Model> pose_;
     std::unique_ptr<Model> pattern_;
