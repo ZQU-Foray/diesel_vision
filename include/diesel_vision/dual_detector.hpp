@@ -14,6 +14,9 @@
 
 namespace diesel_vision {
 
+/// Pose 模型训练标签契约：0 为红色、1 为蓝色。
+ArmorColor pose_class_to_armor_color(int class_id);
+
 // 颜色/四角点与图案模型各管一件事。
 class DualDetector {
   public:

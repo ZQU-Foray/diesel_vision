@@ -5,14 +5,19 @@
 #include <cstdlib>
 #include <iostream>
 
-<<<<<<< HEAD
 #include "diesel_vision/dual_detector.hpp"
-=======
-#include "foray_vision/dual_detector.hpp"
-#include "foray_vision/armor_pipeline.hpp"
->>>>>>> 02baef7 (feat(vision):在detector.cpp现在只保留双模型检测的接口,去除了单模型的接口,模拟器的单模型还保留但是不能运行后续处理)
+#include "diesel_vision/dual_detector.hpp"
+#include "diesel_vision/armor_pipeline.hpp"
 
 namespace diesel_vision {
+namespace diesel_vision {
+TEST(DualDetectorTest, PoseColorClassesFollowOriginalLabels) {
+    EXPECT_EQ(pose_class_to_armor_color(0), ArmorColor::Red);
+    EXPECT_EQ(pose_class_to_armor_color(1), ArmorColor::Blue);
+    EXPECT_THROW(pose_class_to_armor_color(-1), std::invalid_argument);
+    EXPECT_THROW(pose_class_to_armor_color(2), std::invalid_argument);
+}
+
 TEST(DualDetectorTest, RunsTwoRealModelsWhenFixtureIsProvided) {
     const char* pose = std::getenv("FORAY_TEST_POSE_ONNX");
     const char* pattern = std::getenv("FORAY_TEST_PATTERN_ONNX");

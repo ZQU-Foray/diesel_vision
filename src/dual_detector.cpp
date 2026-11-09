@@ -12,6 +12,16 @@
 #include <vector>
 
 namespace diesel_vision {
+namespace diesel_vision {
+
+ArmorColor pose_class_to_armor_color(int class_id) {
+    if (class_id == 0)
+        return ArmorColor::Red;
+    if (class_id == 1)
+        return ArmorColor::Blue;
+    throw std::invalid_argument("Pose color class must be 0 (red) or 1 (blue)");
+}
+
 namespace {
 
 constexpr int kSide = 640;
@@ -226,7 +236,7 @@ DualDetector::Frame DualDetector::detect(const cv::Mat& bgr_image) {
             continue;
         ArmorDetection armor{};
         armor.corners.assign(pose.points.begin(), pose.points.end());
-        armor.color = pose.cls == 0 ? ArmorColor::Blue : ArmorColor::Red;
+        armor.color = pose_class_to_armor_color(pose.cls);
         armor.id = patterns[match.index].cls; // 图案模型：0 哨兵、1 步兵；重装=2 暂无模型输出
         armor.type = ArmorType::Small;
         armor.confidence = std::min(pose.score, patterns[match.index].score);
