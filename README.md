@@ -1,4 +1,4 @@
-# foray_vision
+# diesel_vision
 
 > **L3** · owner 角色：视觉
 
@@ -13,9 +13,9 @@
 > 本仓处于**初始化状态**，尚无源码。以下流程随 P0/P1 落地逐步可用。
 
 ```bash
-# 1. 拉取（仓齐备后改为从元仓 foray_ws 一键拉取）
-git clone git@github.com:ZQU-Foray/foray_vision.git
-cd foray_vision
+# 1. 拉取（仓齐备后改为从元仓 diesel_ws 一键拉取）
+git clone git@github.com:ZQU-Foray/diesel_vision.git
+cd diesel_vision
 
 # 2. 依赖安装
 rosdep install -y -r --from-paths . --ignore-src --rosdistro humble
@@ -42,7 +42,7 @@ colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release
 | 目标感知 | 装甲板检测/跟踪结果 |
 | 融合态势 | 多源去重 / 坐标统一 / 时间对齐 / 置信度仲裁 |
 
-`WorldSnapshot` 字段分区（详见 `foray_interfaces`）：A `self` · B `allies[2]` · C `enemies[3]` ·
+`WorldSnapshot` 字段分区（详见 `diesel_interfaces`）：A `self` · B `allies[2]` · C `enemies[3]` ·
 D `game` · E `context` · F `temporal`。
 
 ## `WorldSnapshot` 四条设计原则（违反任何一条都会破坏下游）
@@ -69,14 +69,14 @@ D `game` · E `context` · F `temporal`。
 
 - 本仓是态势的**唯一权威来源**；其他仓不得自行拼凑世界状态
 
-- 自瞄的目标感知细节在 `foray_auto_aim`，本仓只提供**装甲板级**的原始感知
+- 自瞄的目标感知细节在 `diesel_auto_aim`，本仓只提供**装甲板级**的原始感知
 
 ## 上下游
 
 | 方向 | 对象 |
 |---|---|
-| **上游**（本仓依赖谁） | `foray_interfaces` · `foray_platform` · `foray_localization` |
-| **下游**（谁依赖本仓） | `foray_auto_aim` · `foray_decision` · `foray_robots` · `foray_ws` |
+| **上游**（本仓依赖谁） | `diesel_interfaces` · `diesel_platform` · `diesel_localization` |
+| **下游**（谁依赖本仓） | `diesel_auto_aim` · `diesel_decision` · `diesel_robots` · `diesel_ws` |
 
 ## 参考
 

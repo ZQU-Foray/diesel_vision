@@ -4,7 +4,7 @@
 
 - [ ] 接装甲板检测/跟踪，产出带置信度的目标
 - [ ] 实现多源态势融合（去重 / 坐标统一 / 时间对齐 / 置信度仲裁）
-- [ ] 生成 `WorldSnapshot`（对齐 `foray_interfaces` 的冻结 schema）
+- [ ] 生成 `WorldSnapshot`（对齐 `diesel_interfaces` 的冻结 schema）
 - [ ] 保证 `WorldSnapshot` 生成是纯函数、零 ROS 依赖
 
 ## 当前 Agent State
