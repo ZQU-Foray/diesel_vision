@@ -55,6 +55,21 @@ install(DIRECTORY include/ DESTINATION include)
 ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
 ament_export_dependencies(Eigen3 OpenCV)
 
+# 海康相机调试入口是可选工具，不给生产视觉库增加 MVS 依赖。
+find_path(MVS_INCLUDE_DIR MvCameraControl.h HINTS /opt/MVS/include $ENV{MVS_HOME}/include)
+find_library(MVS_LIBRARY MvCameraControl HINTS /opt/MVS/lib/64 $ENV{MVS_HOME}/lib/64)
+if(MVS_INCLUDE_DIR AND MVS_LIBRARY)
+    add_executable(foray_vision_camera_debug tools/camera_debug.cpp)
+    target_include_directories(foray_vision_camera_debug PRIVATE ${MVS_INCLUDE_DIR})
+    target_link_libraries(foray_vision_camera_debug PRIVATE ${PROJECT_NAME} ${MVS_LIBRARY})
+    get_filename_component(MVS_LIBRARY_DIR "${MVS_LIBRARY}" DIRECTORY)
+    set_target_properties(foray_vision_camera_debug PROPERTIES
+        INSTALL_RPATH "${MVS_LIBRARY_DIR};${ONNXRUNTIME_LIBRARY_DIR}")
+    install(TARGETS foray_vision_camera_debug RUNTIME DESTINATION lib/${PROJECT_NAME})
+else()
+    message(STATUS "MVS SDK not found: skipping camera-only debug executable")
+endif()
+
 if(BUILD_TESTING)
     find_package(ament_cmake_gtest REQUIRED)
     ament_add_gtest(test_pnp test/test_pnp.cpp)
