@@ -12,19 +12,20 @@ namespace diesel_vision {
 enum class MatchState { Unmatched, Matched, Ambiguous, InvalidBox };
 
 struct PatternMatch {
-    MatchState state = MatchState::Unmatched;
-    std::size_t index = 0; // 仅 state == Matched 时有效
+  MatchState state = MatchState::Unmatched;
+  std::size_t index = 0; // 仅 state == Matched 时有效
 };
 
 struct PatternMatchResult {
-    // 每个装甲板框对应一个结果；歧义时不强行选置信度最高的图案。
-    std::vector<PatternMatch> armor_to_pattern;
-    // 每个图案框对应一个结果；可定位漏检、重叠框和坏框。
-    std::vector<PatternMatch> pattern_to_armor;
+  // 每个装甲板框对应一个结果；歧义时不强行选置信度最高的图案。
+  std::vector<PatternMatch> armor_to_pattern;
+  // 每个图案框对应一个结果；可定位漏检、重叠框和坏框。
+  std::vector<PatternMatch> pattern_to_armor;
 };
 
-PatternMatchResult match_pattern_centers(const std::vector<cv::Rect2f>& armor_boxes,
-                                         const std::vector<cv::Rect2f>& pattern_boxes);
+PatternMatchResult
+match_pattern_centers(const std::vector<cv::Rect2f> &armor_boxes,
+                      const std::vector<cv::Rect2f> &pattern_boxes);
 
 } // namespace diesel_vision
 
