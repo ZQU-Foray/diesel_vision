@@ -185,3 +185,28 @@ Decision: `DualDetector` 增加可选 `intra_op_threads`（默认 0 保留 ORT �
 Reason: 优化应先作用于实际瓶颈，且线程数具有硬件/后端依赖；离线吞吐不是控制闭环延迟或实机 FPS。
 
 Implementation note: 将 RGB→CHW 写入改为按行读取，保持数值映射不变；同一固定图、8 线程复测预处理约 5.17 ms、双模型总耗时约 35.75 ms。不同轮次系统负载未完全控制，需用多图复核。
+
+---
+
+## Decision
+
+Date: 2026-11-14
+
+Context: `feat/sp-dual-detector-vision` 基于旧 `foray_vision` 命名开发，`dev` 已完成 diesel 改名，
+两者分叉（分支领先 7、落后 2）；分支同时存在旧单模型 `detector.hpp` 与双模型 `armor_detection.hpp` 两套
+检测结果类型，`detector.hpp` 已无任何实现文件与测试。
+
+Decision: 分支 rebase 到 `dev`，命名统一为 `diesel_vision`（namespace、include 路径、include guard、
+`DIESEL_TEST_*` 环境变量）；删除 `detector.hpp` / `detector.cpp` / `test_detector.cpp`，
+`ArmorType` / `ArmorColor` / `ArmorDetection` 只由 `armor_detection.hpp` 提供；rebase 前状态留在
+`backup/sp-dual-pre-rebase-1114`。
+
+Reason:
+- 保留两套同名类型会让 `DualDetector` 与 PnP 的 `ArmorDetection` 产生 ODR 风险，且 `detector.hpp` 无人实现
+- 先收敛到 `dev` 基线，后续 I4 改仓名只需一次机械改名，不再叠加 rebase 冲突
+
+Rejected:
+- 直接把分支合并进 `dev`（绕过分叉，历史里留下 foray 命名）
+- 保留 `detector.hpp` 作兼容别名（仓库尚未对外发布，无兼容负担）
+
+Source: `foray_docs/repository_structure.md` §2、§6.6；dev_task `vision-front-backend-split` I3。

@@ -32,6 +32,14 @@ branch:        main
 modified files: （首次初始化）
 risk level:    L1
 
+## 2026-11-14 前端收敛（I3）
+
+- [x] `git rebase dev` 重放 7 个提交（含双模型、类别契约、相机调试入口）
+- [x] 命名收敛：namespace / include 路径 / include guard / 测试环境变量统一 `diesel_vision`、`DIESEL_TEST_*`
+- [x] 删除旧单模型 `detector.hpp` / `detector.cpp` / `test_detector.cpp`，`DualDetector` 走 `armor_detection.hpp`
+- [x] 本地 CMake 构建通过（`-DONNXRUNTIME_DIR=.dsh-tmp/onnxruntime`），`ctest` 5 组 16 条全绿
+- [x] 备份分支 `backup/sp-dual-pre-rebase-1114` 保留 rebase 前状态
+
 ## 模糊点与待确认项
 
 - 本仓接口尚未冻结，任务清单为**方向性**的，落地顺序以 `foray_docs/algorithm_structure.md` §9 演进阶段为准
@@ -52,5 +60,6 @@ Commit: （首次提交）
 - [x] 本地工作区中 `diesel_vision` 可构建且 PnP/Detector/调用链单元测试通过
 - [x] 本地工作区中 `diesel_vision` 可构建且 PnP/双模型/调用链单元测试通过
 - [x] 双模型固定图分段计时与 CPU ORT 线程数对照完成；下一步需模拟器逐帧验证 Tracker 和端到端耗时
+- [x] 本地 `cmake` + `ctest` 在 diesel_vision 命名下 5 组 16 条全绿（ONNX Runtime 1.20.1）
 - [ ] CI 绿灯
 - [ ] 每个新增模块带独立可执行测试

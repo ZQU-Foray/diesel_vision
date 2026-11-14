@@ -14,7 +14,7 @@
 ├── .gitignore
 ├── CMakeLists.txt          PnP、双模型与调用链的构建、安装及单元测试
 ├── package.xml             ROS 2 包声明
-├── include/diesel_vision/  检测结果类型、PnP、双模型、调用链及图案框配对接口
+├── include/diesel_vision/  检测结果类型、双模型、PnP、图案框配对与调用链接口
 ├── src/                   PnP、双模型、调用链及图案框配对实现
 ├── tools/camera_debug.cpp  可选海康 MVS 相机只读调试窗口（不发送控制）
 ├── test/                  对应的离线单元测试
@@ -23,7 +23,7 @@
         └── ci.yml           复制自组织 CI 模板
 ```
 
-> 当前正式图像入口连接双模型与四角 PnP；旧单模型源码和测试已移除。双模型已完成真实 ONNX 离线推理，并共享预处理、并行执行两个独立 Session。HSV 仲裁、相机标定与实机验证仍待完成。
+> 当前正式图像入口连接双模型与四角 PnP；旧单模型 `detector.hpp/.cpp` 与 `test_detector.cpp` 已于 2026-11-14 移除，检测结果类型统一由 `armor_detection.hpp` 提供。双模型已完成真实 ONNX 离线推理，并共享预处理、并行执行两个独立 Session。HSV 仲裁、相机标定与实机验证仍待完成。
 
 > `sp_lightbar_geometry` 是历史仿真适配工具；正式相机链路直接用物理外轮廓四角做 PnP，不转换为灯条端点。
 
