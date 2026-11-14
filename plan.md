@@ -70,3 +70,10 @@ Commit: （首次提交）
 - 包名 / CMake `project()` / `include/diesel_vision_frontend/` / `namespace diesel_vision_frontend` / guard `DIESEL_VISION_FRONTEND_*` / 调试可执行 `diesel_vision_frontend_camera_debug` 全量改名。
 - 本地验证：`cmake -DONNXRUNTIME_DIR=... -DBUILD_TESTING=ON` 构建通过，5 组 16 条测试全绿。
 - 下一步：I5 前端多目标抽象（TargetClass / Observation / Detector / registry）。
+
+## 2026-11-14 I5 前端多目标抽象
+
+- 新增 `TargetClass` / `Observation` / `Detector` / `DetectorRegistry` / `DetectorConfig`，装配走 `config/vision.conf`。
+- `ArmorDetector` 成为首个 `TargetClass::Armor` 实现；无标定时只输出像素四角，`normal_valid=false`。
+- 验收：`test/test_detector_registry.cpp` 用假检测器证明「1 个实现 + 1 行注册 + 1 段配置」即可接入，并覆盖未注册名/重复注册/重复键/非数字参数的报错。
+- 本地：前端 7 个测试程序 28 条全绿（含 registry 11 条、armor_detector 3 条其中 2 条按夹具跳过）；与后端 83 条合计 111 条。

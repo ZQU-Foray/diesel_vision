@@ -15,7 +15,13 @@
 ├── CMakeLists.txt          PnP、双模型与调用链的构建、安装及单元测试
 ├── package.xml             ROS 2 包声明
 ├── include/diesel_vision_frontend/  检测结果类型、双模型、PnP、图案框配对与调用链接口
-├── src/                   PnP、双模型、调用链及图案框配对实现
+│   ├── target_class.hpp     目标类别枚举 TargetClass
+│   ├── observation.hpp      前后端逐帧契约 Observation
+│   ├── detector.hpp         Detector 抽象接口
+│   ├── detector_registry.hpp 静态注册表 + 配置装配
+│   └── armor_detector.hpp   装甲板检测器（首个 Detector 实现）
+├── src/                   PnP、双模型、调用链、图案框配对与检测器注册表实现
+├── config/vision.conf    检测器装配配置（enabled + <名字>.<参数>）
 ├── tools/camera_debug.cpp  可选海康 MVS 相机只读调试窗口（不发送控制）
 ├── test/                  对应的离线单元测试
 └── .github/
@@ -28,6 +34,8 @@
 > `sp_lightbar_geometry` 是历史仿真适配工具；正式相机链路直接用物理外轮廓四角做 PnP，不转换为灯条端点。
 
 > 双模型接口附带可选 CPU ORT 线程配置和单帧阶段计时；`test/test_dual_detector.cpp` 可用本地 ONNX/图片夹具做离线分段基准，`test/test_pnp.cpp` 可选重复解算计时。
+
+> 多目标抽象：`TargetClass` + `Detector` + `DetectorRegistry` + `Observation`。新增一类目标 = 一个实现文件 + 一行 `DIESEL_REGISTER_DETECTOR` + 一段 `config/vision.conf`；`test/test_detector_registry.cpp` 用假检测器覆盖注册、装配、重复注册与错误配置。`ArmorDetector` 是首个实现，内部仍是 `DualDetector` + `Solver`，无标定时只输出像素四角并把 `normal_valid` 置 false。
 
 > `DualDetector` 使用当前 Pose 标签契约 0=红、1=蓝；`test/test_dual_detector.cpp` 同时覆盖数字到颜色的映射。当前本地 ONNX 的名称元数据已修正，但换权重必须重新核对其类别表。
 

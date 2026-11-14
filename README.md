@@ -18,6 +18,27 @@
 
 正式图像入口 `process_armor_frame(DualDetector&, Solver&, ArmorSize, image)` 只接受双模型：颜色/外轮廓四角与图案唯一配对后，用外轮廓四角直接做 PnP。旧 `[1,26,N]` 单模型前端已移除；`sp_lightbar_geometry` 仅是历史仿真适配工具，真实链路不使用灯条端点。独立的海康 MVS 相机调试工具只采图、检测并可选显示相机系 PnP，不接串口、Tracker、云台控制或开火；实机外参与时间对齐尚未验证。
 
+## 多目标检测抽象
+
+前端按「一类目标 = 一个 `Detector` 实现」组织：`TargetClass` 声明类别（装甲板、能量机关、前哨站、基地、未知），
+`Detector` 接口只要求 `target_class()` 与 `detect(bgr, stamp_ns) → std::vector<Observation>`，
+`Observation` 是前后端之间唯一的逐帧契约（类别、像素四角、相机系位置、法向、置信度、时间戳、来源、板号、重投影误差）。
+
+装配由 `config/vision.conf` 驱动（最小 `key=value` 格式，不引入 YAML 依赖）：
+
+```
+enabled = armor
+armor.pose_model = /path/pose.onnx
+armor.pattern_model = /path/pattern.onnx
+```
+
+**新增一类目标只需要三处改动**：一个继承 `Detector` 的实现文件、一行 `DIESEL_REGISTER_DETECTOR("名字", 类别, 工厂)`、
+一段 `enabled` + `<名字>.*` 配置。核心流水线、`DetectorRegistry` 与后端消费代码都不改；
+`test/test_detector_registry.cpp` 用假检测器把这条契约钉成回归测试（未注册名、重复注册、重复键、非法数字都直接报错，不静默降级）。
+
+装甲板是首个实现 `ArmorDetector`：内部仍是 `DualDetector` 双模型 + `PnP`，无标定时只输出像素四角并显式置 `normal_valid=false`，
+不会伪造位置。
+
 ### 实车相机只读调试
 
 安装海康 MVS SDK 后，构建会额外生成 `diesel_vision_frontend_camera_debug`。先关闭占用相机的 MVS 预览，确认相机处于连续采集模式。仅测试检测时运行：

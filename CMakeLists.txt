@@ -30,6 +30,8 @@ add_library(${PROJECT_NAME} SHARED
     src/pattern_match.cpp
     src/dual_detector.cpp
     src/sp_lightbar_geometry.cpp
+    src/detector_registry.cpp
+    src/armor_detector.cpp
 )
 
 target_link_libraries(${PROJECT_NAME} PUBLIC Eigen3::Eigen ${OpenCV_LIBS} ${ONNXRUNTIME_LIB} Threads::Threads)
@@ -86,6 +88,12 @@ if(BUILD_TESTING)
 
     ament_add_gtest(test_sp_lightbar_geometry test/test_sp_lightbar_geometry.cpp)
     target_link_libraries(test_sp_lightbar_geometry ${PROJECT_NAME})
+
+    ament_add_gtest(test_detector_registry test/test_detector_registry.cpp)
+    target_link_libraries(test_detector_registry ${PROJECT_NAME})
+
+    ament_add_gtest(test_armor_detector test/test_armor_detector.cpp)
+    target_link_libraries(test_armor_detector ${PROJECT_NAME})
 
 endif()
 

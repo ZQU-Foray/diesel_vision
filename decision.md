@@ -229,3 +229,23 @@ Reason: 前端只做检测与几何，仓名必须能表达这一点；后端改
 Source: 迁移计划 I4（dev_task `vision-front-backend-split`）；PR #2（merge commit `55ae500`）。
 
 Rejected: 新建 `diesel_vision_frontend` 仓并搬代码（丢历史与 PR）；保留 `diesel_vision` 仓名只改包名（仓名与职责仍然错位）。
+
+---
+
+## Decision
+
+Date: 2026-11-14
+
+Context: I5 —— 前端要能装载更多目标的识别，不能再让「装甲板」写死在流水线和接口里。
+
+Decision:
+- 新增 `target_class.hpp`（`TargetClass{Armor,EnergyMechanism,Outpost,Base,Unknown}`，带稳定字符串名）、`observation.hpp`（统一逐帧 `Observation`）、`detector.hpp`（`Detector` 抽象：`target_class()` + `detect(bgr, stamp_ns)`）、`detector_registry.hpp`（静态注册 + `DetectorConfig` 装配）。
+- 装配用 `config/vision.conf`（`enabled = armor` + `<名字>.<参数>`），不引入 YAML 依赖；未注册名、重复注册、重复键、非数字参数一律抛 `std::invalid_argument`，不静默降级。
+- `ArmorDetector` 作为首个实现：内部仍是 `DualDetector` + `Solver`，输出 `Observation`；无标定时只输出像素四角并显式 `normal_valid=false`，不伪造 `xyz_camera`。
+- 注册方式为一行宏 `DIESEL_REGISTER_DETECTOR("armor", Armor, make_armor_detector)`，静态初始化期完成，无 `dlopen`。
+
+Reason: 编译期注册无新依赖、可在单测里直接验证；配置与实现分离后，新增目标只动三个文件（实现、注册行、配置），核心流水线与后端契约零改动。异常式校验让配置错误在装配期暴露，而不是在第一帧静默少检。
+
+Source: 迁移计划 I5（dev_task `vision-front-backend-split`）；`test/test_detector_registry.cpp` 用假检测器验证「一个实现 + 一行注册 + 一段配置」即可接入。
+
+Rejected: 运行时 `dlopen` 插件（新增依赖、跨平台与符号可见性问题）；用 `std::variant` 枚举所有目标类型（每加一类都要改核心头与所有消费方）；YAML 配置（为一行配置引入 yaml-cpp）。
