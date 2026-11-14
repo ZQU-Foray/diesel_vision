@@ -1,11 +1,11 @@
-#ifndef FORAY_VISION_ARMOR_DETECTION_HPP
-#define FORAY_VISION_ARMOR_DETECTION_HPP
+#ifndef DIESEL_VISION_ARMOR_DETECTION_HPP
+#define DIESEL_VISION_ARMOR_DETECTION_HPP
 
 #include <opencv2/core.hpp>
 
 #include <vector>
 
-namespace foray_vision {
+namespace diesel_vision {
 
 /// 装甲板规格，决定 PnP 使用的真实尺寸。
 enum class ArmorType { Big, Small };
@@ -22,6 +22,6 @@ struct ArmorDetection {
   ArmorColor color = ArmorColor::Blue;
 };
 
-} // namespace foray_vision
+} // namespace diesel_vision
 
-#endif // FORAY_VISION_ARMOR_DETECTION_HPP
+#endif // DIESEL_VISION_ARMOR_DETECTION_HPP

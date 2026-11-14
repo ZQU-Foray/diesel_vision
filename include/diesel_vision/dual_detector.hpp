@@ -1,13 +1,8 @@
-#ifndef FORAY_VISION_DUAL_DETECTOR_HPP
-#define FORAY_VISION_DUAL_DETECTOR_HPP
+#ifndef DIESEL_VISION_DUAL_DETECTOR_HPP
+#define DIESEL_VISION_DUAL_DETECTOR_HPP
 
-<<<<<<< HEAD:include/diesel_vision/dual_detector.hpp
-#include "diesel_vision/detector.hpp"
+#include "diesel_vision/armor_detection.hpp"
 #include "diesel_vision/pattern_match.hpp"
-=======
-#include "foray_vision/armor_detection.hpp"
-#include "foray_vision/pattern_match.hpp"
->>>>>>> 02baef7 (feat(vision):在detector.cpp现在只保留双模型检测的接口,去除了单模型的接口,模拟器的单模型还保留但是不能运行后续处理):include/foray_vision/dual_detector.hpp
 
 #include <memory>
 #include <string>

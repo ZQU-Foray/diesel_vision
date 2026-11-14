@@ -49,11 +49,8 @@ Commit: （首次提交）
 ## Acceptance Criteria
 
 - [ ] 本仓能独立 `colcon build`（无代码时跳过）
-<<<<<<< HEAD
 - [x] 本地工作区中 `diesel_vision` 可构建且 PnP/Detector/调用链单元测试通过
-=======
-- [x] 本地工作区中 `foray_vision` 可构建且 PnP/双模型/调用链单元测试通过
->>>>>>> 02baef7 (feat(vision):在detector.cpp现在只保留双模型检测的接口,去除了单模型的接口,模拟器的单模型还保留但是不能运行后续处理)
+- [x] 本地工作区中 `diesel_vision` 可构建且 PnP/双模型/调用链单元测试通过
 - [x] 双模型固定图分段计时与 CPU ORT 线程数对照完成；下一步需模拟器逐帧验证 Tracker 和端到端耗时
 - [ ] CI 绿灯
 - [ ] 每个新增模块带独立可执行测试

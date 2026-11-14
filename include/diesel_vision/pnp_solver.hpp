@@ -1,21 +1,10 @@
-#ifndef FORAY_VISION_PNP_SOLVER_HPP
-#define FORAY_VISION_PNP_SOLVER_HPP
+#ifndef DIESEL_VISION_PNP_SOLVER_HPP
+#define DIESEL_VISION_PNP_SOLVER_HPP
 
 #include <cstdint>
 #include <opencv2/core.hpp>
 
-<<<<<<< HEAD:include/diesel_vision/pnp_solver.hpp
-namespace diesel_vision
-{
-    struct ArmorCorners {
-        // 前面detcet规定 0=左上，1=右上，2=右下，3=左下
-        cv::Point2f left_top_point;
-        cv::Point2f right_top_point;
-        cv::Point2f right_bottom_point;
-        cv::Point2f left_bottom_point;
-    };
-=======
-namespace foray_vision {
+namespace diesel_vision {
 struct ArmorCorners {
   // 前面detcet规定 0=左上，1=右上，2=右下，3=左下
   cv::Point2f left_top_point;
@@ -23,7 +12,6 @@ struct ArmorCorners {
   cv::Point2f right_bottom_point;
   cv::Point2f left_bottom_point;
 };
->>>>>>> 02baef7 (feat(vision):在detector.cpp现在只保留双模型检测的接口,去除了单模型的接口,模拟器的单模型还保留但是不能运行后续处理):include/foray_vision/pnp_solver.hpp
 
 struct ArmorSize {
   float width;
@@ -68,15 +56,11 @@ struct GimbalFeedback {
   bool vaild;
 };
 
-<<<<<<< HEAD:include/diesel_vision/pnp_solver.hpp
-} // namespace diesel_solver_pnp
-=======
 // 云台到发射系 发射的放给下游处理
 struct Gimbal2fire {
   cv::Matx33d R;
   cv::Vec3d t;
 };
->>>>>>> 02baef7 (feat(vision):在detector.cpp现在只保留双模型检测的接口,去除了单模型的接口,模拟器的单模型还保留但是不能运行后续处理):include/foray_vision/pnp_solver.hpp
 
 cv::Vec3d transform_point_c2g(const Camera2gimbal &Camera2gimbal,
                               const cv::Vec3d &point_in_camera);
@@ -84,6 +68,6 @@ cv::Vec3d transform_point_c2g(const Camera2gimbal &Camera2gimbal,
 cv::Vec3d transform_point_g2f(const Gimbal2fire &Gimbal2fire,
                               const cv::Vec3d &point_in_gimbal);
 
-} // namespace foray_vision
+} // namespace diesel_vision
 
-#endif // FORAY_VISION_PNP_SOLVER_HPP
+#endif // DIESEL_VISION_PNP_SOLVER_HPP

@@ -5,10 +5,10 @@
 #include <cstdlib>
 #include <iostream>
 
-#include "foray_vision/armor_pipeline.hpp"
-#include "foray_vision/dual_detector.hpp"
+#include "diesel_vision/armor_pipeline.hpp"
+#include "diesel_vision/dual_detector.hpp"
 
-namespace foray_vision {
+namespace diesel_vision {
 TEST(DualDetectorTest, PoseColorClassesFollowOriginalLabels) {
   EXPECT_EQ(pose_class_to_armor_color(0), ArmorColor::Red);
   EXPECT_EQ(pose_class_to_armor_color(1), ArmorColor::Blue);
@@ -17,14 +17,14 @@ TEST(DualDetectorTest, PoseColorClassesFollowOriginalLabels) {
 }
 
 TEST(DualDetectorTest, RunsTwoRealModelsWhenFixtureIsProvided) {
-  const char *pose = std::getenv("FORAY_TEST_POSE_ONNX");
-  const char *pattern = std::getenv("FORAY_TEST_PATTERN_ONNX");
-  const char *image = std::getenv("FORAY_TEST_IMAGE");
+  const char *pose = std::getenv("DIESEL_TEST_POSE_ONNX");
+  const char *pattern = std::getenv("DIESEL_TEST_PATTERN_ONNX");
+  const char *image = std::getenv("DIESEL_TEST_IMAGE");
   if (!pose || !pattern || !image)
     GTEST_SKIP() << "Set three local fixture paths";
   const cv::Mat bgr = cv::imread(image);
   ASSERT_FALSE(bgr.empty());
-  const char *threads_text = std::getenv("FORAY_TEST_INTRA_THREADS");
+  const char *threads_text = std::getenv("DIESEL_TEST_INTRA_THREADS");
   const int intra_op_threads = threads_text ? std::stoi(threads_text) : 0;
   DualDetector detector(pose, pattern, intra_op_threads);
   const auto frame = detector.detect(bgr);
@@ -57,7 +57,7 @@ TEST(DualDetectorTest, RunsTwoRealModelsWhenFixtureIsProvided) {
           cv::norm(repeated.armors[i].corners[k] - frame.armors[i].corners[k]),
           1e-4);
   }
-  if (const char *repeats_text = std::getenv("FORAY_TEST_BENCH_ITERS")) {
+  if (const char *repeats_text = std::getenv("DIESEL_TEST_BENCH_ITERS")) {
     const int repeats = std::atoi(repeats_text);
     ASSERT_GT(repeats, 0);
     const auto started = std::chrono::steady_clock::now();
@@ -86,4 +86,4 @@ TEST(DualDetectorTest, RunsTwoRealModelsWhenFixtureIsProvided) {
               << " measured_total=" << sum.total_ms / repeats << std::endl;
   }
 }
-} // namespace foray_vision
+} // namespace diesel_vision

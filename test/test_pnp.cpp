@@ -99,7 +99,7 @@ std::vector<cv::Point3f> object_points{
   EXPECT_LT(result.reprojection_error, 1e-2);
 
   // 可选性能样本：同一组有效角点重复解算，避免把模型推理计入 PnP。
-  if (const char *repeats_text = std::getenv("FORAY_TEST_PNP_BENCH_ITERS")) {
+  if (const char *repeats_text = std::getenv("DIESEL_TEST_PNP_BENCH_ITERS")) {
     const int repeats = std::atoi(repeats_text);
     ASSERT_GT(repeats, 0);
     const auto started = std::chrono::steady_clock::now();

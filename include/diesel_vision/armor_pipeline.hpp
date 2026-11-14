@@ -1,9 +1,9 @@
-#ifndef FORAY_VISION_ARMOR_PIPELINE
-#define FORAY_VISION_ARMOR_PIPELINE
+#ifndef DIESEL_VISION_ARMOR_PIPELINE
+#define DIESEL_VISION_ARMOR_PIPELINE
 
-#include "foray_vision/dual_detector.hpp"
-#include "foray_vision/pnp_solver.hpp"
-namespace foray_vision {
+#include "diesel_vision/dual_detector.hpp"
+#include "diesel_vision/pnp_solver.hpp"
+namespace diesel_vision {
 // 装甲板识别结果
 struct ArmorObservation {
   ArmorDetection detection; // detect 层结果
@@ -29,6 +29,6 @@ VisionFrameResult process_armor_frame(DualDetector &detector,
 
 // 后续优化的(装甲板类型 全小!)(时间戳的采集)
 
-} // namespace foray_vision
+} // namespace diesel_vision
 
 #endif

@@ -1,12 +1,6 @@
-<<<<<<< HEAD
 #include "diesel_vision/armor_pipeline.hpp"
-#include "diesel_vision/detector.hpp"
+#include "diesel_vision/dual_detector.hpp"
 #include "diesel_vision/pnp_solver.hpp"
-=======
-#include "foray_vision/armor_pipeline.hpp"
-#include "foray_vision/dual_detector.hpp"
-#include "foray_vision/pnp_solver.hpp"
->>>>>>> 02baef7 (feat(vision):在detector.cpp现在只保留双模型检测的接口,去除了单模型的接口,模拟器的单模型还保留但是不能运行后续处理)
 // 调用层 调用 detect 和 pnp
 
 namespace diesel_vision {
@@ -57,4 +51,4 @@ VisionFrameResult process_armor_frame(DualDetector &detector,
   return frame_result;
 }
 
-} // namespace foray_vision
+} // namespace diesel_vision
