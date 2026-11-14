@@ -3,10 +3,10 @@
 
 #include <vector>
 
-#include "diesel_vision/armor_pipeline.hpp"
+#include "diesel_vision_frontend/armor_pipeline.hpp"
 
 // 造数据 + 验证
-namespace diesel_vision {
+namespace diesel_vision_frontend {
 namespace {
 // 模拟装甲板长宽
 constexpr ArmorSize kArmorSize{0.3F, 0.2F};
@@ -84,4 +84,4 @@ TEST(ArmorPipelineTest, KeepsValidArmorsAroundInvalidDetection) {
 }
 
 } // namespace
-} // namespace diesel_vision
+} // namespace diesel_vision_frontend

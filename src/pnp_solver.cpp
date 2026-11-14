@@ -1,4 +1,4 @@
-#include "diesel_vision/pnp_solver.hpp"
+#include "diesel_vision_frontend/pnp_solver.hpp"
 
 #include <Eigen/Dense>
 #include <cmath>
@@ -7,7 +7,7 @@
 #include <opencv2/core/eigen.hpp>
 #include <opencv2/opencv.hpp>
 
-namespace diesel_vision {
+namespace diesel_vision_frontend {
 Solver::Solver(const cv::Mat &camera_matrix, const cv::Mat &distortion_coffs,
                const Camera2gimbal &camera2gimbal)
     : camera_matrix_(camera_matrix.clone()),
@@ -169,4 +169,4 @@ cv::Vec3d transform_point_g2f(const Gimbal2fire &Gimbal2fire,
   return Gimbal2fire.R * point_in_gimbal + Gimbal2fire.t;
 }
 
-} // namespace diesel_vision
+} // namespace diesel_vision_frontend

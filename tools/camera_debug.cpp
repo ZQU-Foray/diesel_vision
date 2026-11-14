@@ -1,5 +1,5 @@
-#include "diesel_vision/armor_pipeline.hpp"
-#include "diesel_vision/dual_detector.hpp"
+#include "diesel_vision_frontend/armor_pipeline.hpp"
+#include "diesel_vision_frontend/dual_detector.hpp"
 
 #include <MvCameraControl.h>
 #include <opencv2/highgui.hpp>
@@ -43,7 +43,7 @@ Options parse_args(int argc, char **argv) {
     const std::string arg = argv[i];
     if (arg == "--help") {
       std::cout
-          << "Usage: diesel_vision_camera_debug --pose-model FILE "
+          << "Usage: diesel_vision_frontend_camera_debug --pose-model FILE "
              "--pattern-model FILE "
              "[--calibration FILE --armor-width-mm MM --armor-height-mm MM] "
              "[--camera-index N] [--threads N]\n"
@@ -227,8 +227,8 @@ std::string class_name(int id) {
   return "unknown";
 }
 
-void draw(cv::Mat &image, const diesel_vision::DualDetector::Frame &detected,
-          const diesel_vision::VisionFrameResult *solved,
+void draw(cv::Mat &image, const diesel_vision_frontend::DualDetector::Frame &detected,
+          const diesel_vision_frontend::VisionFrameResult *solved,
           unsigned int frame_number, const std::string &pnp_status) {
   const int panel_width = 360;
   cv::Mat canvas(image.rows, image.cols + panel_width, CV_8UC3,
@@ -268,7 +268,7 @@ void draw(cv::Mat &image, const diesel_vision::DualDetector::Frame &detected,
     }
     std::ostringstream label;
     label << i << ' ' << class_name(armor.id) << ' '
-          << (armor.color == diesel_vision::ArmorColor::Red ? "red" : "blue")
+          << (armor.color == diesel_vision_frontend::ArmorColor::Red ? "red" : "blue")
           << " conf=" << std::fixed << std::setprecision(2) << armor.confidence;
     const int y = std::max(16, static_cast<int>(armor.corners[0].y) - 8);
     cv::putText(canvas, label.str(),
@@ -301,19 +301,19 @@ int main(int argc, char **argv) {
     const Options options = parse_args(argc, argv);
     const bool use_pnp = !options.calibration.empty();
     Calibration calibration;
-    std::unique_ptr<diesel_vision::Solver> solver;
-    diesel_vision::ArmorSize armor_size{};
+    std::unique_ptr<diesel_vision_frontend::Solver> solver;
+    diesel_vision_frontend::ArmorSize armor_size{};
     if (use_pnp) {
       calibration = load_calibration(options.calibration);
       // 只读取 Solver 的相机系结果；单位由毫米显式换成米，云台外参未验证。
       armor_size = {options.armor_width_mm / 1000.0F,
                     options.armor_height_mm / 1000.0F};
-      const diesel_vision::Camera2gimbal identity{cv::Matx33d::eye(),
+      const diesel_vision_frontend::Camera2gimbal identity{cv::Matx33d::eye(),
                                                   cv::Vec3d(0, 0, 0)};
-      solver = std::make_unique<diesel_vision::Solver>(
+      solver = std::make_unique<diesel_vision_frontend::Solver>(
           calibration.camera_matrix, calibration.distortion, identity);
     }
-    diesel_vision::DualDetector detector(
+    diesel_vision_frontend::DualDetector detector(
         options.pose_model, options.pattern_model, options.threads);
     Camera camera(options.camera_index);
     cv::namedWindow("Foray Vision - camera only / NO CONTROL",
@@ -332,15 +332,15 @@ int main(int argc, char **argv) {
       }
       failures = 0;
       const auto detected = detector.detect(image);
-      diesel_vision::VisionFrameResult solved;
-      const diesel_vision::VisionFrameResult *solved_ptr = nullptr;
+      diesel_vision_frontend::VisionFrameResult solved;
+      const diesel_vision_frontend::VisionFrameResult *solved_ptr = nullptr;
       std::string status = "PnP OFF (no calibration + size)";
       if (use_pnp) {
         if (image.cols != calibration.width ||
             image.rows != calibration.height) {
           status = "PnP OFF: image/calibration SIZE MISMATCH";
         } else {
-          solved = diesel_vision::process_armor_solver(detected.armors, *solver,
+          solved = diesel_vision_frontend::process_armor_solver(detected.armors, *solver,
                                                        armor_size);
           solved_ptr = &solved;
           status = "PnP ON: outer W/H from CLI";

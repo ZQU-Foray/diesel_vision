@@ -1,12 +1,12 @@
-#ifndef DIESEL_VISION_PATTERN_MATCH_HPP
-#define DIESEL_VISION_PATTERN_MATCH_HPP
+#ifndef DIESEL_VISION_FRONTEND_PATTERN_MATCH_HPP
+#define DIESEL_VISION_FRONTEND_PATTERN_MATCH_HPP
 
 #include <opencv2/core.hpp>
 
 #include <cstddef>
 #include <vector>
 
-namespace diesel_vision {
+namespace diesel_vision_frontend {
 
 // 两路模型的框必须来自同一帧，并且都已映射回原始图像像素坐标。
 enum class MatchState { Unmatched, Matched, Ambiguous, InvalidBox };
@@ -27,6 +27,6 @@ PatternMatchResult
 match_pattern_centers(const std::vector<cv::Rect2f> &armor_boxes,
                       const std::vector<cv::Rect2f> &pattern_boxes);
 
-} // namespace diesel_vision
+} // namespace diesel_vision_frontend
 
 #endif

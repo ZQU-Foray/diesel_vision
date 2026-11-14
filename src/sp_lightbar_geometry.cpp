@@ -1,11 +1,11 @@
-#include "diesel_vision/sp_lightbar_geometry.hpp"
+#include "diesel_vision_frontend/sp_lightbar_geometry.hpp"
 
 #include <cmath>
 #include <vector>
 
 #include <opencv2/imgproc.hpp>
 
-namespace diesel_vision {
+namespace diesel_vision_frontend {
 
 std::optional<std::array<cv::Point2f, 4>>
 outer_to_sp_lightbars(const std::array<cv::Point2f, 4> &outer_corners,
@@ -53,4 +53,4 @@ outer_to_sp_lightbars(const std::array<cv::Point2f, 4> &outer_corners,
   return result;
 }
 
-} // namespace diesel_vision
+} // namespace diesel_vision_frontend

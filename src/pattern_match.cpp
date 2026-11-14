@@ -1,8 +1,8 @@
-#include "diesel_vision/pattern_match.hpp"
+#include "diesel_vision_frontend/pattern_match.hpp"
 
 #include <cmath>
 
-namespace diesel_vision {
+namespace diesel_vision_frontend {
 namespace {
 
 bool valid_box(const cv::Rect2f &box) {
@@ -71,4 +71,4 @@ match_pattern_centers(const std::vector<cv::Rect2f> &armor_boxes,
   return result;
 }
 
-} // namespace diesel_vision
+} // namespace diesel_vision_frontend

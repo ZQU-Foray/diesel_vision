@@ -1,12 +1,12 @@
-#ifndef DIESEL_VISION_SP_LIGHTBAR_GEOMETRY_HPP
-#define DIESEL_VISION_SP_LIGHTBAR_GEOMETRY_HPP
+#ifndef DIESEL_VISION_FRONTEND_SP_LIGHTBAR_GEOMETRY_HPP
+#define DIESEL_VISION_FRONTEND_SP_LIGHTBAR_GEOMETRY_HPP
 
 #include <array>
 #include <optional>
 
 #include <opencv2/core.hpp>
 
-namespace diesel_vision {
+namespace diesel_vision_frontend {
 
 /// 双模型标注的装甲板外轮廓转换为 SP PnP 使用的灯条端点。
 /// 两组角点顺序均为左上、右上、右下、左下；外轮廓尺寸须由标注契约或实测给出。
@@ -22,6 +22,6 @@ std::optional<std::array<cv::Point2f, 4>>
 outer_to_sp_lightbars(const std::array<cv::Point2f, 4> &outer_corners,
                       const SpLightbarGeometry &geometry);
 
-} // namespace diesel_vision
+} // namespace diesel_vision_frontend
 
 #endif
