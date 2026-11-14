@@ -3,7 +3,21 @@
 ## 任务列表
 
 - [ ] 接装甲板检测/跟踪，产出带置信度的目标
+- [x] 早期单模型 Detector 已从前端移除；公共检测结果类型独立，正式入口只接双模型
+- [ ] 完成双模型输入/输出边界检查、真实相机验证及与 PnP 的调用链实测（纯数据调用链测试已通过）
+- [x] 增加独立海康 MVS 相机只读调试入口；仅显示双模型检测和可选相机系 PnP，不接云台控制
+- [ ] 现场用当前相机、实测装甲板外轮廓尺寸与同分辨率标定核对角点和距离；记录漏检/错配样本
 - [ ] 实现多源态势融合（去重 / 坐标统一 / 时间对齐 / 置信度仲裁）
+- [ ] 生成 `WorldSnapshot`（对齐 `diesel_interfaces` 的冻结 schema）
+- [x] 实现双检测结果的原图像素框中心配对纯函数与歧义测试（尚未接入双模型推理）
+- [x] 双 ONNX 推理入口离线实模加载和同帧推理通过
+- [x] 双模型共享一次预处理并并行运行独立 Session；固定图片耗时基线与结果一致性测试已加入
+- [x] 正式 `process_armor_frame` 图像入口改为双模型外轮廓四角 → PnP；旧单模型与灯条适配不在真实链路中
+- [x] 将双模型外轮廓四角到 SP 灯条端点的平面几何转换从模拟器移入 Vision，并给出尺寸显式输入与独立测试；仿真尺寸不可当作实车标定
+- [x] 统一 Vision 输出类别为 -1/0/1/2；2 重装仅预留，未训练识别
+- [x] 纠正当前 Pose 模型的红蓝数字契约（0=红、1=蓝），同步本地训练配置、PT/ONNX 名称和部署映射；新增映射回归测试
+- [ ] 现场采集同一帧包含红蓝目标的相机图，核对相机 BGR、模型数字输出和最终颜色；其他 Pose 权重使用前逐个核对契约
+- [ ] 复核双模型关键点标注顺序、置信度门限和颜色冲突；加入可调 HSV 仲裁，完成模拟器画面验收
 - [ ] 生成 `WorldSnapshot`（对齐 `diesel_interfaces` 的冻结 schema）
 - [ ] 保证 `WorldSnapshot` 生成是纯函数、零 ROS 依赖
 
@@ -17,6 +31,14 @@ commit hash:   （首次提交）
 branch:        main
 modified files: （首次初始化）
 risk level:    L1
+
+## 2026-11-14 前端收敛（I3）
+
+- [x] `git rebase dev` 重放 7 个提交（含双模型、类别契约、相机调试入口）
+- [x] 命名收敛：namespace / include 路径 / include guard / 测试环境变量统一 `diesel_vision`、`DIESEL_TEST_*`
+- [x] 删除旧单模型 `detector.hpp` / `detector.cpp` / `test_detector.cpp`，`DualDetector` 走 `armor_detection.hpp`
+- [x] 本地 CMake 构建通过（`-DONNXRUNTIME_DIR=.dsh-tmp/onnxruntime`），`ctest` 5 组 16 条全绿
+- [x] 备份分支 `backup/sp-dual-pre-rebase-1114` 保留 rebase 前状态
 
 ## 模糊点与待确认项
 
@@ -35,5 +57,9 @@ Commit: （首次提交）
 ## Acceptance Criteria
 
 - [ ] 本仓能独立 `colcon build`（无代码时跳过）
+- [x] 本地工作区中 `diesel_vision` 可构建且 PnP/Detector/调用链单元测试通过
+- [x] 本地工作区中 `diesel_vision` 可构建且 PnP/双模型/调用链单元测试通过
+- [x] 双模型固定图分段计时与 CPU ORT 线程数对照完成；下一步需模拟器逐帧验证 Tracker 和端到端耗时
+- [x] 本地 `cmake` + `ctest` 在 diesel_vision 命名下 5 组 16 条全绿（ONNX Runtime 1.20.1）
 - [ ] CI 绿灯
 - [ ] 每个新增模块带独立可执行测试
