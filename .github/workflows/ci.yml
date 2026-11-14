@@ -79,9 +79,15 @@ jobs:
             echo "未发现 C/C++ 代码，跳过。"
           fi
 
+      # 固定版本：ubuntu-latest 镜像自带的 clang-format 版本随发行版漂移，
+      # 会把同一份代码判成「格式不对」。18.1.8 与本地一致。
       - name: Install clang-format
         if: steps.detect.outputs.found == 'true'
-        run: sudo apt-get install -y clang-format
+        shell: bash
+        run: |
+          pip install --break-system-packages clang-format==18.1.8
+          CF="$(python3 -c 'import clang_format,pathlib;print(pathlib.Path(clang_format.__file__).parent/"data"/"bin"/"clang-format")')"
+          echo "CLANG_FORMAT=$CF" >> "$GITHUB_ENV"
 
       - name: Format check
         if: steps.detect.outputs.found == 'true'
@@ -89,7 +95,7 @@ jobs:
         run: |
           find . \( -name '*.c' -o -name '*.h' -o -name '*.cpp' -o -name '*.hpp' \) \
             -not -path './.git/*' -print0 | \
-            xargs -0 -r clang-format --dry-run --Werror
+            xargs -0 -r "$CLANG_FORMAT" --dry-run --Werror
 
   # ---- Python 测试 ----
   test-python:
@@ -155,6 +161,21 @@ jobs:
           apt-get update
           rosdep update
           rosdep install -y -r --from-paths . --ignore-src --rosdistro humble
+
+      # 前端检测需要 ONNX Runtime；官方只发布预编译包，故直接下载固定版本。
+      # 版本与本地验证一致（1.20.1），升级时同步改这里和 decision.md。
+      - name: 准备 ONNX Runtime
+        if: steps.detect.outputs.found == 'true'
+        shell: bash
+        run: |
+          ORT_VERSION=1.20.1
+          curl -fsSL -o /tmp/ort.tgz \
+            "https://github.com/microsoft/onnxruntime/releases/download/v${ORT_VERSION}/onnxruntime-linux-x64-${ORT_VERSION}.tgz"
+          mkdir -p /opt/onnxruntime
+          tar xzf /tmp/ort.tgz -C /opt/onnxruntime --strip-components=1
+          test -f /opt/onnxruntime/include/onnxruntime_cxx_api.h
+          echo "ONNXRUNTIME_DIR=/opt/onnxruntime" >> "$GITHUB_ENV"
+          echo "LD_LIBRARY_PATH=/opt/onnxruntime/lib:${LD_LIBRARY_PATH}" >> "$GITHUB_ENV"
 
       - name: 构建 (colcon build)
         if: steps.detect.outputs.found == 'true'
