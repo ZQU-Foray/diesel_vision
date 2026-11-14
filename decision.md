@@ -92,12 +92,12 @@ Rejected:
 
 Date: 2026-11-14
 
-Context: 原 `diesel_vision`（检测 + 融合 + WorldSnapshot）与原 `diesel_auto_aim`（自瞄）职责重叠，
+Context: 原 `diesel_vision_frontend`（检测 + 融合 + WorldSnapshot）与原 `diesel_auto_aim`（自瞄）职责重叠，
 且 `diesel_auto_aim` 侧的 `detector.hpp` 只有空接口、本仓分支已实现装甲板双模型检测。
 
 Decision: 本仓改名为 `diesel_vision_frontend`，定位为 **L3 检测前端**：相机取流 + 多任务检测器
 （装甲板为首个实现，`TargetClass` 预留能量机关 / 前哨站 / 基地）+ PnP 几何，输出逐帧 `Observation`。
-多源融合与 `WorldSnapshot` 生成上移到 L4 后端 `diesel_vision_backend`；契约消息放 `diesel_interfaces`。
+多源融合与 `WorldSnapshot` 生成上移到 L4 后端 `diesel_vision_frontend_backend`；契约消息放 `diesel_interfaces`。
 
 Reason:
 - 检测器需要 OpenCV / ONNXRuntime 重依赖，与硬实时跟踪分离（C4 依赖重量）
@@ -114,9 +114,9 @@ Source: `foray_docs/repository_structure.md` §2、§6.6；`algorithm_structure.
 
 Date: 2026-10-17
 
-Context: 装甲板检测原型位于 L4 `foray_auto_aim`，但仓库结构将目标感知归于 L3 `diesel_vision`。
+Context: 装甲板检测原型位于 L4 `foray_auto_aim`，但仓库结构将目标感知归于 L3 `diesel_vision_frontend`。
 
-Decision: 将 Detector 的头文件、实现与测试复制到 `diesel_vision`，仅调整命名空间与包含路径；在视觉包的 CMake 中链接 OpenCV、ONNX Runtime，并导出库与头文件。原仓未提交文件暂时保留，待调用方迁移后再决定清理。
+Decision: 将 Detector 的头文件、实现与测试复制到 `diesel_vision_frontend`，仅调整命名空间与包含路径；在视觉包的 CMake 中链接 OpenCV、ONNX Runtime，并导出库与头文件。原仓未提交文件暂时保留，待调用方迁移后再决定清理。
 
 Reason: 保持 L4 消费 L3 的单向依赖，同时不在迁移时改动未完成的检测算法。
 
@@ -196,7 +196,7 @@ Context: `feat/sp-dual-detector-vision` 基于旧 `foray_vision` 命名开发，
 两者分叉（分支领先 7、落后 2）；分支同时存在旧单模型 `detector.hpp` 与双模型 `armor_detection.hpp` 两套
 检测结果类型，`detector.hpp` 已无任何实现文件与测试。
 
-Decision: 分支 rebase 到 `dev`，命名统一为 `diesel_vision`（namespace、include 路径、include guard、
+Decision: 分支 rebase 到 `dev`，命名统一为 `diesel_vision_frontend`（namespace、include 路径、include guard、
 `DIESEL_TEST_*` 环境变量）；删除 `detector.hpp` / `detector.cpp` / `test_detector.cpp`，
 `ArmorType` / `ArmorColor` / `ArmorDetection` 只由 `armor_detection.hpp` 提供；rebase 前状态留在
 `backup/sp-dual-pre-rebase-1114`。
@@ -210,3 +210,22 @@ Rejected:
 - 保留 `detector.hpp` 作兼容别名（仓库尚未对外发布，无兼容负担）
 
 Source: `foray_docs/repository_structure.md` §2、§6.6；dev_task `vision-front-backend-split` I3。
+
+---
+
+## Decision
+
+Date: 2026-11-14
+
+Context: I4 —— 仓名与包名从 `diesel_vision` 改为 `diesel_vision_frontend`，与「前端检测 / 后端融合跟踪」的分家边界对齐。
+
+Decision:
+- GitHub 仓库原地改名 `diesel_vision` → `diesel_vision_frontend`（平台自动重定向旧 URL），本地目录与 `origin` 同步改名。
+- ROS 包名、CMake `project()`、`include/` 目录与 `#include` 路径、`namespace`、头文件 guard（`DIESEL_VISION_FRONTEND_*`）、调试可执行文件（`diesel_vision_frontend_camera_debug`）一并改为新名。
+- `README.md` 定位改为「视觉前端：装甲板检测 + PnP 几何」，对外输出逐帧 `Observation`；多源融合、跟踪与 `WorldSnapshot` 生成明确归 `diesel_vision_backend`。
+
+Reason: 前端只做检测与几何，仓名必须能表达这一点；后端改名 `diesel_vision_backend` 后，若本仓仍叫 `diesel_vision`，上下游文档描述的拓扑就自相矛盾。原地改名保留提交历史、PR 与权限。
+
+Source: 迁移计划 I4（dev_task `vision-front-backend-split`）；PR #2（merge commit `55ae500`）。
+
+Rejected: 新建 `diesel_vision_frontend` 仓并搬代码（丢历史与 PR）；保留 `diesel_vision` 仓名只改包名（仓名与职责仍然错位）。

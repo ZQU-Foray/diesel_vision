@@ -35,7 +35,7 @@ risk level:    L1
 ## 2026-11-14 前端收敛（I3）
 
 - [x] `git rebase dev` 重放 7 个提交（含双模型、类别契约、相机调试入口）
-- [x] 命名收敛：namespace / include 路径 / include guard / 测试环境变量统一 `diesel_vision`、`DIESEL_TEST_*`
+- [x] 命名收敛：namespace / include 路径 / include guard / 测试环境变量统一 `diesel_vision_frontend`、`DIESEL_TEST_*`
 - [x] 删除旧单模型 `detector.hpp` / `detector.cpp` / `test_detector.cpp`，`DualDetector` 走 `armor_detection.hpp`
 - [x] 本地 CMake 构建通过（`-DONNXRUNTIME_DIR=.dsh-tmp/onnxruntime`），`ctest` 5 组 16 条全绿
 - [x] 备份分支 `backup/sp-dual-pre-rebase-1114` 保留 rebase 前状态
@@ -57,9 +57,16 @@ Commit: （首次提交）
 ## Acceptance Criteria
 
 - [ ] 本仓能独立 `colcon build`（无代码时跳过）
-- [x] 本地工作区中 `diesel_vision` 可构建且 PnP/Detector/调用链单元测试通过
-- [x] 本地工作区中 `diesel_vision` 可构建且 PnP/双模型/调用链单元测试通过
+- [x] 本地工作区中 `diesel_vision_frontend` 可构建且 PnP/Detector/调用链单元测试通过
+- [x] 本地工作区中 `diesel_vision_frontend` 可构建且 PnP/双模型/调用链单元测试通过
 - [x] 双模型固定图分段计时与 CPU ORT 线程数对照完成；下一步需模拟器逐帧验证 Tracker 和端到端耗时
-- [x] 本地 `cmake` + `ctest` 在 diesel_vision 命名下 5 组 16 条全绿（ONNX Runtime 1.20.1）
+- [x] 本地 `cmake` + `ctest` 在 diesel_vision_frontend 命名下 5 组 16 条全绿（ONNX Runtime 1.20.1）
 - [ ] CI 绿灯
 - [ ] 每个新增模块带独立可执行测试
+
+## 2026-11-14 I4 仓名与包名迁移
+
+- GitHub 仓 `diesel_vision` → `diesel_vision_frontend`，本地目录与 `origin` 同步；PR #2 先合入 `dev`。
+- 包名 / CMake `project()` / `include/diesel_vision_frontend/` / `namespace diesel_vision_frontend` / guard `DIESEL_VISION_FRONTEND_*` / 调试可执行 `diesel_vision_frontend_camera_debug` 全量改名。
+- 本地验证：`cmake -DONNXRUNTIME_DIR=... -DBUILD_TESTING=ON` 构建通过，5 组 16 条测试全绿。
+- 下一步：I5 前端多目标抽象（TargetClass / Observation / Detector / registry）。

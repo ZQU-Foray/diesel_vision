@@ -1,10 +1,10 @@
-# diesel_vision
+# diesel_vision_frontend
 
 > **L3** · owner 角色：视觉
 
-目标感知 + 态势融合 + WorldSnapshot 生成
+视觉前端：装甲板检测 + PnP 几何
 
-对外输出**唯一**的 `WorldSnapshot`，是决策层的共同输入。
+对外输出逐帧 `Observation`（相机系位置、板法向、板号、置信度）；多源融合、跟踪与 `WorldSnapshot` 生成归 `diesel_vision_backend`。
 
 ---
 
@@ -20,20 +20,20 @@
 
 ### 实车相机只读调试
 
-安装海康 MVS SDK 后，构建会额外生成 `foray_vision_camera_debug`。先关闭占用相机的 MVS 预览，确认相机处于连续采集模式。仅测试检测时运行：
+安装海康 MVS SDK 后，构建会额外生成 `diesel_vision_frontend_camera_debug`。先关闭占用相机的 MVS 预览，确认相机处于连续采集模式。仅测试检测时运行：
 
 ```bash
 source /opt/ros/humble/setup.bash
-cd /home/user/work/foray_ws
-colcon build --packages-select foray_vision --cmake-args -DCMAKE_BUILD_TYPE=Release
-./install/foray_vision/lib/foray_vision/foray_vision_camera_debug \
+cd /home/user/work/diesel_ws
+colcon build --packages-select diesel_vision_frontend --cmake-args -DCMAKE_BUILD_TYPE=Release
+./install/diesel_vision_frontend/lib/diesel_vision_frontend/diesel_vision_frontend_camera_debug \
   --pose-model /path/to/pose.onnx --pattern-model /path/to/pattern.onnx --threads 8
 ```
 
 要看 PnP，再传入与**当前图像分辨率一致**的标定文件，以及**本次目标外轮廓实测**宽高（毫米）：
 
 ```bash
-./install/foray_vision/lib/foray_vision/foray_vision_camera_debug \
+./install/diesel_vision_frontend/lib/diesel_vision_frontend/diesel_vision_frontend_camera_debug \
   --pose-model /path/to/pose.onnx --pattern-model /path/to/pattern.onnx \
   --calibration /path/to/camera_calibration.yaml \
   --armor-width-mm <实测宽> --armor-height-mm <实测高> --threads 8
@@ -43,8 +43,8 @@ colcon build --packages-select foray_vision --cmake-args -DCMAKE_BUILD_TYPE=Rele
 
 ```bash
 # 1. 拉取（仓齐备后改为从元仓 diesel_ws 一键拉取）
-git clone git@github.com:ZQU-Foray/diesel_vision.git
-cd diesel_vision
+git clone git@github.com:ZQU-Foray/diesel_vision_frontend.git
+cd diesel_vision_frontend
 
 # 2. 依赖安装
 rosdep install -y -r --from-paths . --ignore-src --rosdistro humble

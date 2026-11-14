@@ -14,7 +14,7 @@
 ├── .gitignore
 ├── CMakeLists.txt          PnP、双模型与调用链的构建、安装及单元测试
 ├── package.xml             ROS 2 包声明
-├── include/diesel_vision/  检测结果类型、双模型、PnP、图案框配对与调用链接口
+├── include/diesel_vision_frontend/  检测结果类型、双模型、PnP、图案框配对与调用链接口
 ├── src/                   PnP、双模型、调用链及图案框配对实现
 ├── tools/camera_debug.cpp  可选海康 MVS 相机只读调试窗口（不发送控制）
 ├── test/                  对应的离线单元测试

@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 
-#include "diesel_vision/pattern_match.hpp"
+#include "diesel_vision_frontend/pattern_match.hpp"
 
-namespace diesel_vision {
+namespace diesel_vision_frontend {
 namespace {
 
 TEST(PatternMatchTest, UsesPositionInsteadOfCountOrOrder) {
@@ -42,4 +42,4 @@ TEST(PatternMatchTest, KeepsMissingAndInvalidBoxesSeparate) {
 }
 
 } // namespace
-} // namespace diesel_vision
+} // namespace diesel_vision_frontend

@@ -5,10 +5,10 @@
 #include <cstdlib>
 #include <iostream>
 
-#include "diesel_vision/armor_pipeline.hpp"
-#include "diesel_vision/dual_detector.hpp"
+#include "diesel_vision_frontend/armor_pipeline.hpp"
+#include "diesel_vision_frontend/dual_detector.hpp"
 
-namespace diesel_vision {
+namespace diesel_vision_frontend {
 TEST(DualDetectorTest, PoseColorClassesFollowOriginalLabels) {
   EXPECT_EQ(pose_class_to_armor_color(0), ArmorColor::Red);
   EXPECT_EQ(pose_class_to_armor_color(1), ArmorColor::Blue);
@@ -86,4 +86,4 @@ TEST(DualDetectorTest, RunsTwoRealModelsWhenFixtureIsProvided) {
               << " measured_total=" << sum.total_ms / repeats << std::endl;
   }
 }
-} // namespace diesel_vision
+} // namespace diesel_vision_frontend

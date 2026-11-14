@@ -1,10 +1,10 @@
-#ifndef DIESEL_VISION_PNP_SOLVER_HPP
-#define DIESEL_VISION_PNP_SOLVER_HPP
+#ifndef DIESEL_VISION_FRONTEND_PNP_SOLVER_HPP
+#define DIESEL_VISION_FRONTEND_PNP_SOLVER_HPP
 
 #include <cstdint>
 #include <opencv2/core.hpp>
 
-namespace diesel_vision {
+namespace diesel_vision_frontend {
 struct ArmorCorners {
   // 前面detcet规定 0=左上，1=右上，2=右下，3=左下
   cv::Point2f left_top_point;
@@ -68,6 +68,6 @@ cv::Vec3d transform_point_c2g(const Camera2gimbal &Camera2gimbal,
 cv::Vec3d transform_point_g2f(const Gimbal2fire &Gimbal2fire,
                               const cv::Vec3d &point_in_gimbal);
 
-} // namespace diesel_vision
+} // namespace diesel_vision_frontend
 
-#endif // DIESEL_VISION_PNP_SOLVER_HPP
+#endif // DIESEL_VISION_FRONTEND_PNP_SOLVER_HPP

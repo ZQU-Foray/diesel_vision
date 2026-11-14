@@ -1,9 +1,9 @@
-#include "diesel_vision/armor_pipeline.hpp"
-#include "diesel_vision/dual_detector.hpp"
-#include "diesel_vision/pnp_solver.hpp"
+#include "diesel_vision_frontend/armor_pipeline.hpp"
+#include "diesel_vision_frontend/dual_detector.hpp"
+#include "diesel_vision_frontend/pnp_solver.hpp"
 // 调用层 调用 detect 和 pnp
 
-namespace diesel_vision {
+namespace diesel_vision_frontend {
 
 VisionFrameResult
 process_armor_solver(const std::vector<ArmorDetection> &detections,
@@ -51,4 +51,4 @@ VisionFrameResult process_armor_frame(DualDetector &detector,
   return frame_result;
 }
 
-} // namespace diesel_vision
+} // namespace diesel_vision_frontend

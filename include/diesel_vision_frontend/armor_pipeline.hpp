@@ -1,9 +1,9 @@
-#ifndef DIESEL_VISION_ARMOR_PIPELINE
-#define DIESEL_VISION_ARMOR_PIPELINE
+#ifndef DIESEL_VISION_FRONTEND_ARMOR_PIPELINE
+#define DIESEL_VISION_FRONTEND_ARMOR_PIPELINE
 
-#include "diesel_vision/dual_detector.hpp"
-#include "diesel_vision/pnp_solver.hpp"
-namespace diesel_vision {
+#include "diesel_vision_frontend/dual_detector.hpp"
+#include "diesel_vision_frontend/pnp_solver.hpp"
+namespace diesel_vision_frontend {
 // 装甲板识别结果
 struct ArmorObservation {
   ArmorDetection detection; // detect 层结果
@@ -29,6 +29,6 @@ VisionFrameResult process_armor_frame(DualDetector &detector,
 
 // 后续优化的(装甲板类型 全小!)(时间戳的采集)
 
-} // namespace diesel_vision
+} // namespace diesel_vision_frontend
 
 #endif

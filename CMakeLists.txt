@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(diesel_vision)
+project(diesel_vision_frontend)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -59,13 +59,13 @@ ament_export_dependencies(Eigen3 OpenCV)
 find_path(MVS_INCLUDE_DIR MvCameraControl.h HINTS /opt/MVS/include $ENV{MVS_HOME}/include)
 find_library(MVS_LIBRARY MvCameraControl HINTS /opt/MVS/lib/64 $ENV{MVS_HOME}/lib/64)
 if(MVS_INCLUDE_DIR AND MVS_LIBRARY)
-    add_executable(diesel_vision_camera_debug tools/camera_debug.cpp)
-    target_include_directories(diesel_vision_camera_debug PRIVATE ${MVS_INCLUDE_DIR})
-    target_link_libraries(diesel_vision_camera_debug PRIVATE ${PROJECT_NAME} ${MVS_LIBRARY})
+    add_executable(diesel_vision_frontend_camera_debug tools/camera_debug.cpp)
+    target_include_directories(diesel_vision_frontend_camera_debug PRIVATE ${MVS_INCLUDE_DIR})
+    target_link_libraries(diesel_vision_frontend_camera_debug PRIVATE ${PROJECT_NAME} ${MVS_LIBRARY})
     get_filename_component(MVS_LIBRARY_DIR "${MVS_LIBRARY}" DIRECTORY)
-    set_target_properties(diesel_vision_camera_debug PROPERTIES
+    set_target_properties(diesel_vision_frontend_camera_debug PROPERTIES
         INSTALL_RPATH "${MVS_LIBRARY_DIR};${ONNXRUNTIME_LIBRARY_DIR}")
-    install(TARGETS diesel_vision_camera_debug RUNTIME DESTINATION lib/${PROJECT_NAME})
+    install(TARGETS diesel_vision_frontend_camera_debug RUNTIME DESTINATION lib/${PROJECT_NAME})
 else()
     message(STATUS "MVS SDK not found: skipping camera-only debug executable")
 endif()

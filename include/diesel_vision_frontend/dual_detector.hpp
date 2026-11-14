@@ -1,13 +1,13 @@
-#ifndef DIESEL_VISION_DUAL_DETECTOR_HPP
-#define DIESEL_VISION_DUAL_DETECTOR_HPP
+#ifndef DIESEL_VISION_FRONTEND_DUAL_DETECTOR_HPP
+#define DIESEL_VISION_FRONTEND_DUAL_DETECTOR_HPP
 
-#include "diesel_vision/armor_detection.hpp"
-#include "diesel_vision/pattern_match.hpp"
+#include "diesel_vision_frontend/armor_detection.hpp"
+#include "diesel_vision_frontend/pattern_match.hpp"
 
 #include <memory>
 #include <string>
 
-namespace diesel_vision {
+namespace diesel_vision_frontend {
 
 /// Pose 模型训练标签契约：0 为红色、1 为蓝色。
 ArmorColor pose_class_to_armor_color(int class_id);
@@ -53,5 +53,5 @@ private:
   int pattern_side_ = 640;
 };
 
-} // namespace diesel_vision
+} // namespace diesel_vision_frontend
 #endif
