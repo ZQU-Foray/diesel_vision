@@ -7,8 +7,8 @@ namespace {
 TEST(SpLightbarGeometryTest, ConvertsOuterCornersToSpLightbarEndpoints) {
   const std::array<cv::Point2f, 4> outer{
       {{0, 0}, {135, 0}, {135, 125}, {0, 125}}};
-  const auto result =
-      diesel_vision_frontend::outer_to_sp_lightbars(outer, {0.135, 0.125, 0.135, 0.056});
+  const auto result = diesel_vision_frontend::outer_to_sp_lightbars(
+      outer, {0.135, 0.125, 0.135, 0.056});
   ASSERT_TRUE(result.has_value());
   const std::array<cv::Point2f, 4> expected{
       {{0, 34.5F}, {135, 34.5F}, {135, 90.5F}, {0, 90.5F}}};
@@ -21,8 +21,10 @@ TEST(SpLightbarGeometryTest, ConvertsOuterCornersToSpLightbarEndpoints) {
 TEST(SpLightbarGeometryTest, RejectsImpossibleDimensions) {
   const std::array<cv::Point2f, 4> outer{
       {{0, 0}, {135, 0}, {135, 125}, {0, 125}}};
-  EXPECT_FALSE(diesel_vision_frontend::outer_to_sp_lightbars(outer, {0.0, 0.125}));
-  EXPECT_FALSE(diesel_vision_frontend::outer_to_sp_lightbars(outer, {0.100, 0.0}));
+  EXPECT_FALSE(
+      diesel_vision_frontend::outer_to_sp_lightbars(outer, {0.0, 0.125}));
+  EXPECT_FALSE(
+      diesel_vision_frontend::outer_to_sp_lightbars(outer, {0.100, 0.0}));
 }
 
 } // namespace

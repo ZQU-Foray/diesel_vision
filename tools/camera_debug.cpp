@@ -227,7 +227,8 @@ std::string class_name(int id) {
   return "unknown";
 }
 
-void draw(cv::Mat &image, const diesel_vision_frontend::DualDetector::Frame &detected,
+void draw(cv::Mat &image,
+          const diesel_vision_frontend::DualDetector::Frame &detected,
           const diesel_vision_frontend::VisionFrameResult *solved,
           unsigned int frame_number, const std::string &pnp_status) {
   const int panel_width = 360;
@@ -268,7 +269,8 @@ void draw(cv::Mat &image, const diesel_vision_frontend::DualDetector::Frame &det
     }
     std::ostringstream label;
     label << i << ' ' << class_name(armor.id) << ' '
-          << (armor.color == diesel_vision_frontend::ArmorColor::Red ? "red" : "blue")
+          << (armor.color == diesel_vision_frontend::ArmorColor::Red ? "red"
+                                                                     : "blue")
           << " conf=" << std::fixed << std::setprecision(2) << armor.confidence;
     const int y = std::max(16, static_cast<int>(armor.corners[0].y) - 8);
     cv::putText(canvas, label.str(),
@@ -309,7 +311,7 @@ int main(int argc, char **argv) {
       armor_size = {options.armor_width_mm / 1000.0F,
                     options.armor_height_mm / 1000.0F};
       const diesel_vision_frontend::Camera2gimbal identity{cv::Matx33d::eye(),
-                                                  cv::Vec3d(0, 0, 0)};
+                                                           cv::Vec3d(0, 0, 0)};
       solver = std::make_unique<diesel_vision_frontend::Solver>(
           calibration.camera_matrix, calibration.distortion, identity);
     }
@@ -340,8 +342,8 @@ int main(int argc, char **argv) {
             image.rows != calibration.height) {
           status = "PnP OFF: image/calibration SIZE MISMATCH";
         } else {
-          solved = diesel_vision_frontend::process_armor_solver(detected.armors, *solver,
-                                                       armor_size);
+          solved = diesel_vision_frontend::process_armor_solver(
+              detected.armors, *solver, armor_size);
           solved_ptr = &solved;
           status = "PnP ON: outer W/H from CLI";
         }
