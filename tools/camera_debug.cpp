@@ -1,5 +1,5 @@
-#include "foray_vision/armor_pipeline.hpp"
-#include "foray_vision/dual_detector.hpp"
+#include "diesel_vision/armor_pipeline.hpp"
+#include "diesel_vision/dual_detector.hpp"
 
 #include <MvCameraControl.h>
 #include <opencv2/highgui.hpp>
@@ -43,7 +43,7 @@ Options parse_args(int argc, char **argv) {
     const std::string arg = argv[i];
     if (arg == "--help") {
       std::cout
-          << "Usage: foray_vision_camera_debug --pose-model FILE "
+          << "Usage: diesel_vision_camera_debug --pose-model FILE "
              "--pattern-model FILE "
              "[--calibration FILE --armor-width-mm MM --armor-height-mm MM] "
              "[--camera-index N] [--threads N]\n"
@@ -309,12 +309,12 @@ int main(int argc, char **argv) {
       armor_size = {options.armor_width_mm / 1000.0F,
                     options.armor_height_mm / 1000.0F};
       const diesel_vision::Camera2gimbal identity{cv::Matx33d::eye(),
-                                                 cv::Vec3d(0, 0, 0)};
+                                                  cv::Vec3d(0, 0, 0)};
       solver = std::make_unique<diesel_vision::Solver>(
           calibration.camera_matrix, calibration.distortion, identity);
     }
-    diesel_vision::DualDetector detector(options.pose_model,
-                                        options.pattern_model, options.threads);
+    diesel_vision::DualDetector detector(
+        options.pose_model, options.pattern_model, options.threads);
     Camera camera(options.camera_index);
     cv::namedWindow("Foray Vision - camera only / NO CONTROL",
                     cv::WINDOW_NORMAL);
@@ -341,7 +341,7 @@ int main(int argc, char **argv) {
           status = "PnP OFF: image/calibration SIZE MISMATCH";
         } else {
           solved = diesel_vision::process_armor_solver(detected.armors, *solver,
-                                                      armor_size);
+                                                       armor_size);
           solved_ptr = &solved;
           status = "PnP ON: outer W/H from CLI";
         }
